@@ -45,7 +45,17 @@ do
         case "5":
             list.Reverse();
             break;
+        case "6":
+            list.Sort();
+            Console.WriteLine("List ordered successfully.");
+            break;
 
+        case "7":
+            Console.Write("Enter a value: ");
+            string input = Console.ReadLine() ?? string.Empty;
+            list.Sort();
+            list.InsertOrdered(input);
+            break;
         case "8":
             Console.WriteLine(list.ToString());
             break;
@@ -71,7 +81,7 @@ string Menu()
     Console.WriteLine("3. Search for a value");
     Console.WriteLine("4. Remove a value");
     Console.WriteLine("5. Reverse list");
-    Console.WriteLine("6. Order list"); // Homework
+    Console.WriteLine("6. Order list(Sort)"); // Homework
     Console.WriteLine("7. Insert ordered"); // Homework
     Console.WriteLine("8. Show list");
     Console.WriteLine("9. Show list in reverse");

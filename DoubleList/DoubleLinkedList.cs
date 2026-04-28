@@ -2,7 +2,7 @@
 
 namespace DoubleList;
 
-public class DoubleLinkedList<T> : ILinkedList<T>
+public class DoubleLinkedList<T> : ILinkedList<T> where T : IComparable<T>
 {
     private Node<T>? _head;
     private Node<T>? _tail;
@@ -15,7 +15,16 @@ public class DoubleLinkedList<T> : ILinkedList<T>
 
     public bool Contains(T data)
     {
-        throw new NotImplementedException();
+        var current = _head;
+        while (current != null)
+        {
+            if (current.Data != null && current.Data.Equals(data))
+            {
+                return true;
+            }
+            current = current.Next;
+        }
+        return false;
     }
 
     public void InsertAtBeginning(T data)
@@ -52,7 +61,42 @@ public class DoubleLinkedList<T> : ILinkedList<T>
 
     public void InsertOrdered(T data)
     {
-        throw new NotImplementedException();
+        var newNode = new Node<T>(data);
+        // The list is empty
+        if (_head == null)
+        {
+            _head = newNode;
+            _tail = newNode;
+            return;
+        }
+        // The new data is smaller than the head (goes to the beginning)
+        if (data.CompareTo(_head.Data) < 0)
+        {
+            newNode.Next = _head;
+            newNode.Previous = null;
+            _head.Previous = newNode; // Here we connect backwards to the old head
+            _head = newNode;
+            return;
+        }
+        // Traversal to find its position in the middle or at the end
+        var current = _head;
+        while (current.Next != null && current.Next.Data!.CompareTo(data) < 0)
+        {
+            current = current.Next;
+        }
+        // Insert after the node 'current'
+           newNode.Next = current.Next;
+           newNode.Previous = current;
+        if (current.Next != null)
+        {
+            current.Next.Previous = newNode;
+        }
+        else
+        {
+            _tail = newNode; // Update the tail
+        }
+        current.Next = newNode;
+        Console.WriteLine("Inserted successfully: " + data);
     }
 
     public void Remove(T data)
@@ -77,20 +121,56 @@ public class DoubleLinkedList<T> : ILinkedList<T>
                     current.Previous!.Next = current.Next;
                     current.Next!.Previous = current.Previous;
                 }
+                Console.WriteLine($"Removed successfully: {data}");
                 return;
             }
             current = current.Next;
         }
+        Console.WriteLine($"Value '{data}' not found in the list.");
     }
 
     public void Reverse()
     {
-        throw new NotImplementedException();
+        var current = _head;
+        while (current != null)
+        {
+            var next = current.Next;
+            current.Next = current.Previous;
+            current.Previous = next;
+            current = next;
+        }
+        var exchange = _head;
+        _head = _tail;
+        _tail = exchange;
+        Console.WriteLine("List reversed successfully.");
     }
 
     public void Sort()
     {
-        throw new NotImplementedException();
+        if (_head == null) return;
+
+        bool swapped;
+
+        do
+        {
+            swapped = false;
+            var current = _head;
+
+            while (current.Next != null)
+            {
+                if (current.Data!.CompareTo(current.Next.Data) > 0)
+                {
+                    var temp = current.Data;
+                    current.Data = current.Next.Data;
+                    current.Next.Data = temp;
+
+                    swapped = true;
+                }
+
+                current = current.Next;
+            }
+
+        } while (swapped);
     }
 
     override public string ToString()
